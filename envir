@@ -1,0 +1,6 @@
+# ~/.profile
+# add to /etc/environment
+JAVA_HOME=/home/yhyan/Downloads/JDK/jdk1.6.0_25
+PATH=$JAVA_HOME/bin:$PATH
+CLASSPATH=.:$JAVA_HOME/lib
+
