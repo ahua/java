@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="/home/yhyan/workspace/jars/jedis-2.1.0.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/workspace/lucene-3.6.1/lucene-core-3.6.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/yhyan/workspace/lucene-3.6.1/lucene-core-3.6.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/yhyan/workspace/lucene-3.6.1/lucene-test-framework-3.6.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/yhyan/workspace/lucene-3.6.1/lucene-test-framework-3.6.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/yhyan/workspace/jars/gson-2.2.2.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/workspace/jars/gson-2.2.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/workspace/jars/mysql-connector-java-5.1.20-bin.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
