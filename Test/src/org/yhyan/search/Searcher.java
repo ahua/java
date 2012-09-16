@@ -44,6 +44,8 @@ public class Searcher {
 				searchField,
 				new StandardAnalyzer(Version.LUCENE_35));
 		Query query = parser.parse(q);
+		// search name filed which conains "$q"
+		
 		
 		TopDocs hits = is.search(query, null, TOP_N);
 		
