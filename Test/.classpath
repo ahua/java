@@ -16,5 +16,12 @@
 	<classpathentry kind="lib" path="/home/yhyan/workspace/jars/gson-2.2.2.jar"/>
 	<classpathentry kind="lib" path="/home/yhyan/workspace/jars/gson-2.2.2-javadoc.jar"/>
 	<classpathentry kind="lib" path="/home/yhyan/workspace/jars/mysql-connector-java-5.1.20-bin.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/workspace/jars/commons-lang3-3.1-bin/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/workspace/jars/commons-logging-1.1.1/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/workspace/lucene-3.6.1/contrib/spatial/lucene-spatial-3.6.1.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/workspace/lucene-3.6.1/contrib/misc/lucene-misc-3.6.1.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/workspace/jars/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/workspace/lucene-3.6.1/contrib/queries/lucene-queries-3.6.1.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/workspace/jars/lukeall-4.0.0-ALPHA.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
