@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="java.basic"/>
+	<classpathentry kind="src" path="lucene.basic"/>
+	<classpathentry kind="src" path="small.app"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/dom4j-1.6.1/dom4j-1.6.1.jar" sourcepath="/home/yhyan/Downloads/dom4j-1.6.1/src"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-analyzers-common-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-analyzers-icu-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-analyzers-kuromoji-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-analyzers-morfologik-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-analyzers-phonetic-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-analyzers-smartcn-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-analyzers-stempel-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-analyzers-uima-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-benchmark-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-core-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-demo-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-facet-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-facet-4.0.0-BETA-examples.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-grouping-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-highlighter-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-join-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-memory-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-misc-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-queries-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-queryparser-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-sandbox-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-spatial-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-suggest-4.0.0-BETA.jar"/>
+	<classpathentry kind="lib" path="/home/yhyan/Downloads/javalib/lucene-test-framework-4.0.0-BETA.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

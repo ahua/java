@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+sudo dpkg -i /var/dolphinsearch/enabled/jetty/files/jetty-deb-7.6.6.v20120903.deb
+
+
