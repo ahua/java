@@ -1,0 +1,27 @@
+###############################################################
+#
+# Settings to allow BOCHS 2.0 to run the PJOS x86 version
+#
+# (Based on example configuration from BOCHS distribution)
+#
+###############################################################
+
+# memory size
+megs: 32
+
+# ROM images
+romimage: file=$BXSHARE/BIOS-bochs-latest, address=0xf0000
+vgaromimage: $BXSHARE/VGABIOS-elpin-2.40
+
+# boot from floppy
+floppya: 1_44=floppy.bin, status=inserted
+boot: a
+
+# log file
+log: bochsout.txt
+
+# disable mouse
+mouse: enabled=0
+
+# enable US keyboard mapping
+keyboard_mapping: enabled=1, map=$BXSHARE/keymaps/x11-pc-us.map

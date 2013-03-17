@@ -1,0 +1,324 @@
+<!-- Settings used to generate the initial execution image for the emulator implementation of PJOS -->
+<image>
+    
+    <!--
+        The memory offset where the image will be loaded. Object locations
+        will be assigned from this offset and pointer values will be absolute
+        addresses. This value can not be zero because that represents the null
+        pointer, not an actual object location.
+    -->
+    <offset value="0x4"/>
+    
+    <!-- The root instance name, will be located at start of image -->
+    <root value="Core"/>
+
+    <!-- The byte order, can be "big endian" or "little endian" -->
+    <byteorder value="big endian"/>
+    
+    <!--
+        Method frames required at start of execution.
+        Only instance methods with ()V descriptor can be specified here.
+        The specified instance is saved into local variable slot 0.
+    -->
+    <frame name="Idle Frame" class="org/pjos/common/runtime/Idle" method="run" instance="Idle Thread"/>
+    <frame name="Initialiser Frame" class="org/pjos/common/runtime/Initialiser" method="run" instance="Initial Thread"/>
+    <frame name="Notifier Frame" class="org/pjos/common/runtime/Notifier" method="run" instance="Notifier"/>
+    
+    <!-- Instances -->
+    <instance name="Core" class="org/pjos/common/runtime/Core">
+        <field class="org/pjos/common/runtime/Core" type="next" name="next" value=""/>
+        <field class="org/pjos/common/runtime/Core" type="instance" name="idle" value="Idle Thread"/>
+        <field class="org/pjos/common/runtime/Core" type="instance" name="notifier" value="Notifier"/>
+        <field class="org/pjos/common/runtime/Core" type="instance" name="running" value="Initial Thread"/>
+        <field class="org/pjos/common/runtime/Core" type="method" name="threadRunMethod" value="org/pjos/common/runtime/Thread:run:()V"/>
+        <field class="org/pjos/common/runtime/Core" type="method" name="resolveMethod" value="org/pjos/common/runtime/Core:resolve:()V"/>
+        <field class="org/pjos/common/runtime/Core" type="method" name="throwNullPointer" value="org/pjos/common/runtime/Core:throwNullPointerException:()V"/>
+        <field class="org/pjos/common/runtime/Core" type="method" name="throwClassCast" value="org/pjos/common/runtime/Core:throwClassCastException:()V"/>
+        <field class="org/pjos/common/runtime/Core" type="method" name="throwArrayIndexOutOfBounds" value="org/pjos/common/runtime/Core:throwArrayIndexOutOfBounds:()V"/>
+        <field class="org/pjos/common/runtime/Core" type="method" name="throwArithmetic" value="org/pjos/common/runtime/Core:throwArithmetic:()V"/>
+        <field class="org/pjos/common/runtime/Core" type="type" name="architectureType" value="org/pjos/emulator/driver/Emulator"/>
+        <field class="org/pjos/common/runtime/Core" type="type" name="staticsType" value="org/pjos/common/runtime/Statics"/>
+        <field class="org/pjos/common/runtime/Core" type="type" name="lockType" value="org/pjos/common/runtime/Lock"/>
+        <field class="org/pjos/common/runtime/Core" type="type" name="booleanArrayType" value="[Z"/>
+        <field class="org/pjos/common/runtime/Core" type="type" name="charArrayType" value="[C"/>
+        <field class="org/pjos/common/runtime/Core" type="type" name="floatArrayType" value="[F"/>
+        <field class="org/pjos/common/runtime/Core" type="type" name="doubleArrayType" value="[D"/>
+        <field class="org/pjos/common/runtime/Core" type="type" name="byteArrayType" value="[B"/>
+        <field class="org/pjos/common/runtime/Core" type="type" name="shortArrayType" value="[S"/>
+        <field class="org/pjos/common/runtime/Core" type="type" name="intArrayType" value="[I"/>
+        <field class="org/pjos/common/runtime/Core" type="type" name="longArrayType" value="[J"/>
+    </instance>
+    <instance name="Idle Thread" class="org/pjos/common/runtime/Idle">
+        <field class="org/pjos/common/runtime/Thread" type="frame" name="frame" value="Idle Frame"/>
+        <field class="org/pjos/common/runtime/Thread" type="int" name="priority" value="0"/>
+        <field class="org/pjos/common/runtime/Thread" type="boolean" name="started" value="true"/>
+    </instance>
+    <instance name="Initial Thread" class="org/pjos/common/runtime/Initialiser">
+        <field class="org/pjos/common/runtime/Initialiser" type="strings" name="toBeInterned" value="All Strings"/>
+        <field class="org/pjos/common/runtime/Initialiser" type="types" name="toBeRegistered" value="All Types"/>
+        <field class="org/pjos/common/runtime/Thread" type="frame" name="frame" value="Initialiser Frame"/>
+        <field class="org/pjos/common/runtime/Thread" type="instance" name="nextRunning" value="Initial Thread"/>
+        <field class="org/pjos/common/runtime/Thread" type="instance" name="prevRunning" value="Initial Thread"/>
+        <field class="org/pjos/common/runtime/Thread" type="int" name="priority" value="10"/>
+        <field class="org/pjos/common/runtime/Thread" type="boolean" name="started" value="true"/>
+    </instance>
+    <instance name="Notifier" class="org/pjos/common/runtime/Notifier">
+        <field class="org/pjos/common/runtime/Thread" type="frame" name="frame" value="Notifier Frame"/>
+        <field class="org/pjos/common/runtime/Thread" type="int" name="priority" value="10"/>
+        <field class="org/pjos/common/runtime/Thread" type="boolean" name="started" value="true"/>
+        <field class="org/pjos/common/runtime/Thread" type="boolean" name="suspended" value="true"/>
+    </instance>
+
+    <!--
+        =========================================================
+        Classes. If a class is in the list, all its super classes
+        and implemented interfaces should also appear.
+        =========================================================
+    -->
+    <!--
+        Classes required for basic initialisation. These are the classes required by the initialisation
+        thread to register all loaded classes and intern strings.
+    -->
+    <class name="[B"/>
+    <class name="[C"/>
+    <class name="[D"/>
+    <class name="[F"/>
+    <class name="[I"/>
+    <class name="[J"/>
+    <class name="[Ljava/lang/Class;"/>
+    <class name="[Ljava/lang/String;"/>
+    <class name="[Ljava/util/HashMap$HashEntry;"/>
+    <class name="[Lorg/pjos/common/runtime/Entry;"/>
+    <class name="[S"/>
+    <class name="[Z"/>
+    <class name="boolean"/>
+    <class name="byte"/>
+    <class name="char"/>
+    <class name="double"/>
+    <class name="float"/>
+    <class name="int"/>
+    <class name="java/io/Serializable"/>
+    <class name="java/lang/CharSequence"/>
+    <class name="java/lang/Class"/>
+    <class name="java/lang/ClassLoader"/>
+    <class name="java/lang/Cloneable"/>
+    <class name="java/lang/Comparable"/>
+    <class name="java/lang/Math"/>
+    <class name="java/lang/Object"/>
+    <class name="java/lang/Runnable"/>
+    <class name="java/lang/String"/>
+    <class name="java/lang/String$CaseInsensitiveComparator"/>
+    <class name="java/lang/StringBuffer"/>
+    <class name="java/lang/System"/>
+    <class name="java/lang/Thread"/>
+    <class name="java/lang/ThreadGroup"/>
+    <class name="java/util/AbstractList"/>
+    <class name="java/util/AbstractList$1"/>
+    <class name="java/util/AbstractList$2"/>
+    <class name="java/util/AbstractMap"/>
+    <class name="java/util/AbstractMap$BasicMapEntry"/>
+    <class name="java/util/AbstractSet"/>
+    <class name="java/util/ArrayList"/>
+    <class name="java/util/Collections"/>
+    <class name="java/util/Collections$EmptyList"/>
+    <class name="java/util/Collections$EmptyMap"/>
+    <class name="java/util/Collections$EmptySet"/>
+    <class name="java/util/Collections$ReverseComparator"/>
+    <class name="java/util/Collections$UnmodifiableCollection"/>
+    <class name="java/util/Collections$UnmodifiableIterator"/>
+    <class name="java/util/Collections$UnmodifiableList"/>
+    <class name="java/util/Collections$UnmodifiableRandomAccessList"/>
+    <class name="java/util/Comparator"/>
+    <class name="java/util/HashMap"/>
+    <class name="java/util/HashMap$HashEntry"/>
+    <class name="java/util/Map"/>
+    <class name="java/util/Map$Entry"/>
+    <class name="java/util/RandomAccess"/>
+    <class name="java/util/RandomAccessSubList"/>
+    <class name="java/util/Set"/>
+    <class name="java/util/SubList"/>
+    <class name="java/util/SubList$1"/>
+    <class name="long"/>
+    <class name="short"/>
+    <class name="org/pjos/common/runtime/Abstract"/>
+    <class name="org/pjos/common/runtime/BasicEntry"/>
+    <class name="org/pjos/common/runtime/BasicPool"/>
+    <class name="org/pjos/common/runtime/BootClassLoader"/>
+    <class name="org/pjos/common/runtime/Constants"/>
+    <class name="org/pjos/common/runtime/Core"/>
+    <class name="org/pjos/common/runtime/Entry"/>
+    <class name="org/pjos/common/runtime/Field"/>
+    <class name="org/pjos/common/runtime/Frame"/>
+    <class name="org/pjos/common/runtime/Idle"/>
+    <class name="org/pjos/common/runtime/Initialiser"/>
+    <class name="org/pjos/common/runtime/IntegerConstant"/>
+    <class name="org/pjos/common/runtime/Lock"/>
+    <class name="org/pjos/common/runtime/LongConstant"/>
+    <class name="org/pjos/common/runtime/Member"/>
+    <class name="org/pjos/common/runtime/Method"/>
+    <class name="org/pjos/common/runtime/Named"/>
+    <class name="org/pjos/common/runtime/Notifier"/>
+    <class name="org/pjos/common/runtime/Opcode"/>
+    <class name="org/pjos/common/runtime/Statics"/>
+    <class name="org/pjos/common/runtime/StringConstant"/>
+    <class name="org/pjos/common/runtime/Thread"/>
+    <class name="org/pjos/common/runtime/Type"/>
+    <class name="org/pjos/common/runtime/UnresolvedField"/>
+    <class name="org/pjos/common/runtime/UnresolvedMethod"/>
+    <class name="org/pjos/common/runtime/UnresolvedType"/>
+
+    <!--
+        Classes required by platform-specific initialisation. These are the
+        classes required to allow a platform to initialise its basic
+        environment - usually just enough to enable it to load classes from
+        somewhere else (for example a floppy disk or hard disk).
+    -->
+    <class name="[Ljava/lang/Object;"/>
+    <class name="[Ljava/util/Hashtable$HashEntry;"/>
+    <class name="[Lorg/pjos/common/runtime/BasicEntry;"/>
+    <class name="[Lorg/pjos/common/runtime/Field;"/>
+    <class name="[Lorg/pjos/common/runtime/Method;"/>
+    <class name="[Lorg/pjos/common/runtime/Type;"/>
+    <class name="org/pjos/common/fs/fat12/BlockDirectory"/>
+    <class name="org/pjos/common/fs/fat12/Block"/>
+    <class name="org/pjos/common/fs/fat12/ChainDirectory"/>
+    <class name="org/pjos/common/fs/fat12/Chain"/>
+    <class name="org/pjos/common/fs/fat12/Cluster"/>
+    <class name="org/pjos/common/fs/fat12/Counter"/>
+    <class name="org/pjos/common/fs/fat12/Data"/>
+    <class name="org/pjos/common/fs/fat12/Directory"/>
+    <class name="org/pjos/common/fs/fat12/Entry"/>
+    <class name="org/pjos/common/fs/fat12/File"/>
+    <class name="org/pjos/common/fs/fat12/Floppy1440"/>
+    <class name="org/pjos/common/fs/fat12/FloppyBroker"/>
+    <class name="org/pjos/common/fs/fat12/Image"/>
+    <class name="org/pjos/common/fs/fat12/Manager"/>
+    <class name="org/pjos/common/fs/fat12/Model"/>
+    <class name="org/pjos/common/fs/fat12/Sector"/>
+    <class name="org/pjos/common/fs/fat12/Util"/>
+    <class name="org/pjos/emulator/driver/ConsoleOutputStream"/>
+    <class name="org/pjos/emulator/driver/Constants"/>
+    <class name="org/pjos/emulator/driver/Emulator"/>
+    <class name="org/pjos/emulator/driver/FloppyDevice"/>
+    <class name="java/io/ByteArrayInputStream"/>
+    <class name="java/io/ByteArrayOutputStream"/>
+    <class name="java/io/DataInput"/>
+    <class name="java/io/DataInputStream"/>
+    <class name="java/io/File"/>
+    <class name="java/io/FileDescriptor"/>
+    <class name="java/io/FileInputStream"/>
+    <class name="java/io/FilterInputStream"/>
+    <class name="java/io/FilterOutputStream"/>
+    <class name="java/io/InputStream"/>
+    <class name="java/io/OutputStream"/>
+    <class name="java/io/OutputStreamWriter"/>
+    <class name="java/io/PrintStream"/>
+    <class name="java/io/PrintWriter"/>
+    <class name="java/io/Writer"/>
+    <class name="java/lang/reflect/Modifier"/>
+    <class name="java/util/AbstractCollection"/>
+    <class name="java/util/AbstractSequentialList"/>
+    <class name="java/util/Collection"/>
+    <class name="java/util/Dictionary"/>
+    <class name="java/util/Enumeration"/>
+    <class name="java/util/Hashtable"/>
+    <class name="java/util/Hashtable$HashEntry"/>
+    <class name="java/util/Iterator"/>
+    <class name="java/util/LinkedList"/>
+    <class name="java/util/LinkedList$Entry"/>
+    <class name="java/util/LinkedList$LinkedListItr"/>
+    <class name="java/util/List"/>
+    <class name="java/util/ListIterator"/>
+    <class name="java/util/Properties"/>
+    <class name="java/util/StringTokenizer"/>
+    <class name="org/pjos/common/device/Device"/>
+    <class name="org/pjos/common/device/DeviceManager"/>
+    <class name="org/pjos/common/device/Storage"/>
+    <class name="org/pjos/common/file/Broker"/>
+    <class name="org/pjos/common/file/DriveManager"/>
+    <class name="org/pjos/common/file/FileSystem"/>
+    <class name="org/pjos/common/file/FilterBroker"/>
+    <class name="org/pjos/common/file/MountBroker"/>
+    <class name="org/pjos/common/file/Path"/>
+    <class name="org/pjos/common/runtime/InterruptManager"/>
+    <class name="org/pjos/common/runtime/Synchronizer"/>
+    <class name="org/pjos/common/runtime/Architecture"/>
+    <class name="org/pjos/common/runtime/Opcodes"/>
+    <class name="org/pjos/common/runtime/TypeFactory"/>
+
+    <!--
+        The following classes may be added for exception handling and debugging
+    -->
+    <class name="[Ljava/lang/StackTraceElement;"/>
+    <class name="java/io/FileNotFoundException"/>
+    <class name="java/io/IOException"/>
+    <class name="java/lang/ArrayIndexOutOfBoundsException"/>
+    <class name="java/lang/ArithmeticException"/>
+    <class name="java/lang/Character"/>
+    <class name="java/lang/ClassCastException"/>
+    <class name="java/lang/ClassFormatError"/>
+    <class name="java/lang/ClassNotFoundException"/>
+    <class name="java/lang/Error"/>
+    <class name="java/lang/Exception"/>
+    <class name="java/lang/IllegalStateException"/>
+    <class name="java/lang/IncompatibleClassChangeError"/>
+    <class name="java/lang/IndexOutOfBoundsException"/>
+    <class name="java/lang/Integer"/>
+    <class name="java/lang/InternalError"/>
+    <class name="java/lang/LinkageError"/>
+    <class name="java/lang/Long"/>
+    <class name="java/lang/NoSuchMethodError"/>
+    <class name="java/lang/NullPointerException"/>
+    <class name="java/lang/Number"/>
+    <class name="java/lang/Runnable"/>
+    <class name="java/lang/RuntimeException"/>
+    <class name="java/lang/StackTraceElement"/>
+    <class name="java/lang/Thread"/>
+    <class name="java/lang/ThreadGroup"/>
+    <class name="java/lang/Throwable"/>
+    <class name="java/lang/UnsupportedOperationException"/>
+    <class name="java/lang/VirtualMachineError"/>
+
+
+
+    <!--
+        ==========================================================================
+        Magic methods. These methods must be declared native in their class files.
+        Each magic method is given an id which tells the runtime which internal
+        task to perform.
+        ==========================================================================
+    -->
+
+    <!-- Runtime methods -->
+    <magic id="1" name="org/pjos/common/runtime/Core.debug(Ljava/lang/String;)V"/>
+    <magic id="2" name="org/pjos/common/runtime/Core.executeStatic(Lorg/pjos/common/runtime/Method;)V"/>
+    <magic id="3" name="org/pjos/common/runtime/Core.get()Lorg/pjos/common/runtime/Core;"/>
+    <magic id="4" name="org/pjos/common/runtime/Core.getType(Ljava/lang/Class;)Lorg/pjos/common/runtime/Type;"/>
+    <magic id="5" name="org/pjos/common/runtime/Frame.currentFrame()Lorg/pjos/common/runtime/Frame;"/>
+    <magic id="6" name="org/pjos/common/runtime/Idle.sleep()V"/>
+    <magic id="7" name="org/pjos/common/runtime/Statics.create(Lorg/pjos/common/runtime/Type;)V"/>
+    <magic id="8" name="org/pjos/common/runtime/Thread.currentThread()Lorg/pjos/common/runtime/Thread;"/>
+    <magic id="9" name="org/pjos/common/runtime/Thread.sleep(JI)V"/>
+    <magic id="10" name="org/pjos/common/runtime/Thread.startHook()V"/>
+    <magic id="11" name="org/pjos/common/runtime/Thread.suspend()V"/>
+    <magic id="12" name="org/pjos/common/runtime/Thread.resume()V"/>
+    
+    <!-- Core library methods -->
+    <magic id="13" name="java/lang/Object.getClass()Ljava/lang/Class;"/>
+    <magic id="14" name="java/lang/Object.notify()V"/>
+    <magic id="15" name="java/lang/Object.notifyAll()V"/>
+    <magic id="16" name="java/lang/Object.wait(JI)V"/>
+    <magic id="17" name="java/lang/System.currentTimeMillis()J"/>
+    <magic id="18" name="java/lang/System.identityHashCode(Ljava/lang/Object;)I"/>
+    <magic id="19" name="java/lang/System.setErr(Ljava/io/PrintStream;)V"/>
+    <magic id="20" name="java/lang/System.setOut(Ljava/io/PrintStream;)V"/>
+    <magic id="21" name="java/lang/System.setIn(Ljava/io/InputStream;)V"/>
+
+    <!-- Platform specific methods -->
+    <magic id="22" name="org/pjos/emulator/driver/Emulator.writeToConsole(I)V"/>
+    <magic id="23" name="org/pjos/emulator/driver/Emulator.readFromFloppy(I)I"/>
+    <magic id="24" name="org/pjos/emulator/driver/Emulator.writeToFloppy(II)V"/>
+    <magic id="25" name="org/pjos/emulator/driver/Emulator.nextInterrupt()I"/>
+    <magic id="26" name="org/pjos/emulator/driver/Emulator.readFromKeyboard()I"/>
+
+</image>

@@ -1,0 +1,215 @@
+Issues that need to be addressed at some point
+==============================================
+
+- In x86 version, keyboard buffer seems to fill up
+  sometimes and keyboard driver doesn't clear it.
+  This appears to freeze the whole system.
+
+- Should replace DriveManager with a more generic class
+  that can simply mount filesystems on specified paths.
+  This would be more like the UNIX idea of having one
+  root to the file system instead of many drives and
+  would remove the need to have drive names like "xxx:".
+
+- Need some way of getting information when the x86
+  implementation exits suddenly or blocks, crash report
+  or core dump or whatever...
+
+- In the fat12 code: A short name is generated for every
+  file created. The long file name should not match the
+  short name, instead the short name should be altered
+  so they don't match, this is currently not done.
+
+- In the fat12 code: When creating a new directory or file,
+  the entire path needs to be checked to make sure its length is valid.
+
+- Should only need 48 interrupt entries in IDT, not 256.
+
+- Idle thread could call method in architecture object
+  so that idle implementation is made platform dependent.
+  (Useful for emulator because it can sleep instead of
+  wasting processor time).
+
+- A thread can be interrupted at any time, should the
+  thread schedule and unschedule routines disable
+  interrupts to prevent threads being queued when the
+  queue is being manipulated?
+
+- Currently there is a hash map lookup for each interrupt
+  to find the lock for a given key. The responsibility for
+  finding the lock could be delegated to the architecture
+  implementation so that a platform can use something
+  faster if desired. (eg. 256 entry array holding lock
+  objects for x86?)
+
+- Need to implement and uncomment checkAccess() method in
+  java.lang.Thread
+
+- Fix Classloader implementation. The <clinit> method should
+  not be run if a class has already been loaded by a parent
+  classloader. Perhaps classes loaded by parents should not
+  be stored in the hashtable of the child? Or otherwise there
+  could be a flag somewhere to say whether a particular class
+  has been initialised or not. The <clinit> method is also
+  run in the BootClassLoader class! Perhaps this should be
+  done in the defineClass method or in the resolveClass
+  method???
+
+- Type objects which don't need static fields objects could
+  have their statics field set to null instead of an empty
+  object - same goes for instance/static maps.
+
+- Is it possible to declare native methods as synchronized?
+  Should this be handled by the vm? Currently not...
+
+- When running the class initialiser after loading a class,
+  need to remove it from the classes hash table if it
+  doesn't execute properly?
+
+- Need to throw an out of memory error after gc if not
+  enough space is available. Or could perhaps just throw
+  it in the thread with the highest stack frame count?
+  Need some way of stopping single threads which go
+  out of control without bringing down entire system.
+
+- Does the broker class need a rename(path) method? Rename
+  functionality definitely needs to be implemented somewhere...
+
+- String intern hash table should be a weak hash map!
+
+- Should the i/o framework and filesystem framework be built
+  using the new channel architecture, rather than the current
+  methods in Storage.java which are based on the InputStream
+  and OutputStream classes?
+
+- File descriptor class also needs to have system in/out/err
+  streams settable. Could perhaps make these non settable,
+  and provide wrapper streams where the actual streams are
+  set underneath...(in System class)?
+
+- Use classpath implementation of java.io.OutputStreamWriter
+  when encoding classes can be initialised and used.
+
+- Would it be possible to implement the java.awt.Toolkit and
+  related classes using Swing? Or are the swing classes based
+  on the awt classes to the extent that this would be not be
+  possible?
+
+- Spec says there can be more than one line number table in a
+  class file, at the moment the vm.runtime code assumes that
+  there is just one table. May need to extend it to handle
+  multiple tables...? Seems to work with Sun's java compiler
+  as it currently is though.
+
+- Implement wide instruction prefix as a separate instruction
+  that checks the following byte code and calls appropriate
+  internal methods...
+
+- Native methods
+  - Need to decide if native methods will be implemented. These
+    could be simple mappings to java methods instead of platform
+	native code.
+  - Should native methods be shown in stack traces? Currently
+    magic methods are designed to execute within the time
+	of one instruction so don't need to list them. If native
+	methods are implemented as mappings to java methods, then
+	the mapped method would appear in the stack trace.
+
+- Should field lookup in org.pjos.common.runtime.Type be recursive
+  like method lookup (ie. search superclasses as well)? Seems
+  to work currently without recursion.
+
+- Should vm.runtime.Statics objects be created for all classes or
+  only those that actually have static fields...? Currently created
+  for all.
+
+- Should image generating code initialise static field values if
+  they have a constant value defined?
+  
+- Should runtime code initialise static field values when creating
+  class instances if they have a constant value defined?
+
+- Why does each method object have a reference to the runtime
+  constant pool? Is this necessary or should it be removed?
+
+- Need to put security manager calls into class loader implementation.
+
+- Check that getDeclaringClass method is correctly implemented
+  for inner classes - may need to update vm.runtime.Type to handle
+  this information. Is this used in the runtime somewhere, or just
+  for reflective purposes?
+
+- Could 'intern' instances of runtime pool constants to save
+  memory space... eg. StringConstant, IntegerConstant, LongConstant
+
+- Initialisation of large objects could be passed to java method
+  so as to be broken down into smaller steps. eg. space gets initialised
+  then the java method writes null/zero values 256 bytes at a time.
+
+- need a facility to copy raw memory data from java? This could be
+  used in System.arraycopy implementation, as well as in methods
+  to initialise large objects and arrays.
+
+- newarray and anewarray instructions could call a java method
+  to break down initialisation into smaller steps (eg. writing
+  nulls/zero values to array items) to avoid breaking multitasking.
+
+- multianewarray instruction is going to be very difficult to
+  implement using the current architecture. It requires multiple
+  object allocation, thereby breaking the current assumption of
+  only one allocation per instruction (which can be interrupted
+  by garbage collection if necessary and the instruction rolled
+  back). Need to come up with new architecture? Implementation
+  could call a java method to break the initialisation down into
+  smaller steps that won't interrupt multitasking.
+
+- Need to modify garbage collection process to handle finalisations
+  and soft/weak references.
+
+- JFS (Journaled File System) is licensed by IBM under GPL. Might be
+  the best file system to implement. Not sure how hard it would be
+  though. http://www-124.ibm.com/developerworks/oss/jfs/
+
+- Could implement FAT-16 for hard drive support
+
+- Could implement XFS or ReiserFS or some other filesystem with
+  journaling, quick recovery, etc.
+
+- When throwing an exception, should make sure that when popping
+  off a method frame, should release any locks held. This has been
+  implemented but not tested.
+
+- Some instructions should check for divide by zero and throw
+  arithmetic exceptions, eg. irem, lrem, idiv, ldiv
+
+- The wait, notify and synchronization functions sometimes assume
+  that the calling thread has already obtained ownership of the
+  object's lock. Is this correct, or should they do a check and
+  throw some sort of synchronization exception?
+
+- Could call gc() method with a size argument so it can check if
+  enough space is freed to continue execution or if out of memory
+  error needs to be thrown. This might be a better way of doing
+  things than rolling back pc register to execute method invocation
+  again.
+
+- Priority thread scheduling. When changing to the next round-robin
+  thread, could check if the current priority thread is of a lower
+  priority and if so, replace it with the current round-robin thread.
+  Then don't need to keep a separate structure for priority threads.
+  Or could have a priority queue for threads of equal priority?
+
+- Could get Sun compatibility tests and use for dev...? (These are
+  supposed to be available for open source implementations now, not
+  just for licensed implementations according to jakarta.apache.org)
+
+- Implement access checks when accessing fields and invoking methods
+  as specified by VM spec. How will native and magic methods be
+  protected? Should access checks be done at runtime at every method
+  call or can they be done at compile/load/resolve time?
+
+- Should invokespecial do recursive lookup procedure for some methods?
+  Check spec!
+
+- Finish off implementation of checkcast and instanceof. In particular
+  need to handle arrays and throw exceptions where necessary.

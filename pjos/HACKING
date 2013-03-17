@@ -1,0 +1,125 @@
+Hacking PJOS
+============
+
+
+Development tools
+-----------------
+SUN jdk 1.4					http://java.sun.com
+Apache ANT 1.5Beta2			http://jakarta.apache.org/ant
+GNU Classpath 0.04			http://www.gnu.org/software/classpath
+NASM assembler				http://nasm.sourceforge.net
+BOCHS 1.4.1					http://bochs.sourceforge.net
+
+
+Using GNU Classpath with PJOS
+-----------------------------
+In order to use the GNU Classpath libraries, unpack the classpath distribution
+to somewhere and set the "classpath" property in the "build.xml" file to point
+to this location. Before the java files can be compiled,
+run "./configure --enable-debug --disable-load-library" in the classpath
+directory.  This will create the file "gnu/classpath/Configuration.java" which
+is required to compile successfully. Library loading is not supported in PJOS
+so is turned off.
+
+I was unable to run the configure script until I had installed the JIKES
+compiler, although I don't think it gets used in the configure process. It may
+be possible to manually create "Configuration.java" file from
+"Configuration.java.in".
+
+Only the java source files from Classpath are used, it is not necessary to
+run make or install. The java compiler from Sun is sufficient to compile the
+classpath files, see the classpath entry in "build.xml".
+
+
+
+Compiling java code
+-------------------
+Run "ant" in the same directory as "build.xml".
+
+
+Building emulator executable
+----------------------------
+Run "ant emulator" in the same directory as "build.xml". GNU Classpath must be
+installed or this will fail. To execute the emulator, run the command
+"java -jar emulator.jar" from the directory "build/emulator".
+
+
+Building x86 boot disk
+----------------------
+Run "ant x86" in the same directory as "build.xml". GNU Classpath and NASM
+must be installed or this will fail. The boot floppy image created is
+"build/x86/floppy.bin". I recommend using the BOCHS pc emulator to test
+this. Don't boot your favourite pc with it if you value your sanity.
+
+
+
+Directory guide
+---------------
+As there is currently no other documentation, here is a guide to the
+various source code directories.
+
+emulator
+	image.xml: used to generate memory image for the emulator.
+	manifest.mf: used to create executable jar file for emulator gui.
+
+java/*
+	These are implementations of some of the classes defined by Sun for the
+	java virtual machine. Only a few classes have been implemented here, the
+	idea is to use the GNU Classpath libraries as much as possible.
+
+org/pjos/common/device
+	A framework for hardware devices, including storage devices.
+
+org/pjos/common/file
+	A framework designed to allow file systems to be manipulated.
+
+org/pjos/common/fs/fat12
+	An implementation of the fat12 file system for 1.4MB floppy disks. Can
+	also be used to create formatted disk images and load files into them.
+
+org/pjos/common/image
+	Contains code used to create a memory image by pre-loading a number of
+	classes and pre-defined objects. The memory image created is intended to
+	be executed by a java interpreter.
+
+org/pjos/common/runtime
+	Contains code used to represent the information contained in a java class
+	file at runtime. Also contains basic system objects for the running
+	virtual machine (for example "Core.java" is the root of all live objects
+	in the running system).
+
+org/pjos/common/shell
+	An implementation of a basic shell which can't do anything particularly
+	useful yet.
+
+org/pjos/emulator/driver
+	Contains some platform specific driver code for the emulator
+	implementation.
+
+org/pjos/emulator/engine
+	Defines an interface for a virtual machine interpreter. Also contains an
+	implementation which can reload classes at runtime.
+
+org/pjos/emulator/engine/implementation
+	The java vm interpreter for the emulator implementation.
+	Implementation.java: The actual implementation class.
+	Distributor.java: Can see here which instructions are implemented.
+
+org/pjos/emulator/gui
+	A Swing GUI debugger which can be used to execute the interpreter.
+
+org/pjos/x86/driver
+	Contains some platform specific driver code for the x86 implementation.
+
+x86
+	floppy.zip: empty bootable floppy image with the GNU GRUB bootloader.
+	image.xml: used to generate memory image for the x86
+
+x86/asm
+	Contains NASM assembly language source code for the x86 implementation.
+	kernel.asm: entry point for kernel, includes all other files
+	distributor.asm: can see here which instructions are implemented
+
+x86/boot/grub
+	menu.lst: used to create bootable floppy with PJOS kernel
+	

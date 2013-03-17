@@ -1,0 +1,61 @@
+PJOS README
+===========
+
+The purpose of this project is to create a portable operating system based on
+the java virtual machine with the following goals:
+	- to have a simple, modular design
+	- to provide a java execution environment compatible with Sun's JDK.
+	- to write as much as possible of the system code in java
+	- to allow device drivers to be written in java
+	- not to support execution of any platform-specific code
+
+The current status of PJOS is experimental. The two existing partial
+implementations are described below. 
+
+PJOS is released under the GNU GENERAL PUBLIC LICENSE, please see the file
+"COPYING" for details.
+
+
+Instructions for demo "pjosdemo.zip"
+------------------------------------
+You will need the JDK 1.4.1 from SUN (http://java.sun.com) in order to
+run the demo. Unzip the contents of the file "pjosdemo.zip"
+somewhere. Run the following command from the pjosdemo directory:
+"java -jar emulator.jar". If the debugger gui for the emulator does not
+appear, check the file "emulator.log" for error messages. In Windows it
+may be possible to simply double-click "emulator.jar".
+
+
+GNU Classpath
+-------------
+Apart from a few classes which have been implemented specifically for PJOS,
+the java library implementations from the GNU Classpath project have been
+used (http://www.gnu.org/software/classpath/classpath.html).
+
+
+Emulator implementation
+-----------------------
+The emulator is written in java and emulates an abstract machine. Main memory
+and floppy disk are implemented as java byte arrays. The processor is a java
+thread which executes instructions and manipulates the memory and devices as
+if it were an actual processor. The purpose of this implementation is so that
+the logic of instructions can be implemented without having to worry about
+platform specific details.
+
+Currently the emulator does the following:
+	1. Performs some java vm initialisation
+	2. Starts floppy driver and keyboard driver
+	3. Loads shell code from floppy
+	4. Executes shell (a few simple commands available)
+
+The emulator comes with a Swing GUI debugger allowing the state of the vm to
+be observed during execution.
+
+
+x86 implementation
+------------------
+The x86 implementation is based on the emulator and written in assembly (using
+the NASM assembler). Most of the code has been directly ported from the
+emulator, although only about 60% of the functionality currently in the
+emulator has been implemented (step 1 above).
+

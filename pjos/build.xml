@@ -1,0 +1,291 @@
+<!--
+    ANT build file for PJOS (Portable Java Operating System)
+    ========================================================
+
+    This file assumes that the java compiler from the SUN
+    jdk 1.4 will be used. In order to use the classpath library,
+    the location of the distribution must be specified in the
+    "classpath" property below. See the "README_CLASSPATH.txt"
+    file for information on how to configure classpath.
+-->
+<project name="pjos" default="compile" basedir=".">
+
+    <!-- Location of GNU Classpath -->
+    <property name="classpath" value="../classpath-0.05"/>
+
+    <!-- Use the jikes compiler --> 
+    <property name="build.compiler" value="jikes"/>
+    <property name="build.compiler.emacs" value="true"/>
+
+    <!-- Set timestamp and create build directory -->
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="build"/>
+        <mkdir dir="dist"/>
+    </target>
+    
+    <!-- Compile all java code -->
+    <target name="compile" depends="init, classpath">
+		<!--
+			Workaround to force compiler to cross-compile against our versions
+			of system classes. Can't use bootclasspath unfortunately because our
+			versions are incomplete.
+            <delete dir="build/java/lang"/>
+		-->
+        <javac srcdir="."
+        		destdir="build"
+        		includes="org/**,java/**"
+        		debug="on"
+        		deprecation="on"/>
+    </target>
+
+
+    
+    
+
+    <!--
+        Generate an executable image file for the emulator platform. New vms are
+        forked here to avoid linkage errors when the system class loader clashes
+        with the ANT classloader over classes in the org.w3c.dom package.
+        If this target fails, check the output log file specified in the java
+        tag.
+    -->
+    <target name="emulator"
+    		depends="emulator.memory, emulator.floppy, emulator.jar"/>
+
+    <!--
+        Create a memory image for the emulator. If this target fails,
+        check the output log file specified below.
+    -->
+    <target name="emulator.memory" depends="compile, classpath, emulator.init">
+        <java classname="org.pjos.common.image.Creator"
+        		classpath="build"
+        		fork="yes"
+        		failonerror="yes">
+            <arg value="emulator/image.xml"/>
+            <arg value="build;build/classpath"/>
+            <arg value="build/emulator/memory.bin"/>
+            <arg value="build/emulator/memory.log"/>
+        </java>
+    </target>
+
+    <!-- Create the floppy disk image -->
+    <target name="emulator.floppy.init">
+        <java classname="org.pjos.common.fs.fat12.Image"
+        		classpath="build"
+        		failonerror="yes"
+        		fork="yes">
+            <arg value="build/emulator/floppy.bin"/>
+            <arg value="PJOS"/>
+        </java>
+    </target>
+
+    <!-- Create a floppy disk image for the emulator -->
+    <target name="emulator.floppy"
+    		depends="compile, classpath, emulator.init, emulator.floppy.init">
+        <java classname="org.pjos.common.fs.fat12.Import"
+        		classpath="build"
+        		failonerror="yes"
+        		fork="yes">
+            <arg value="build/emulator/floppy.bin"/>
+            <arg value="build;build/classpath"/>
+            
+            <!-- These files will be written to the disk image -->
+            <arg value="/org/pjos/emulator/driver/Test.class"/>
+			<arg value="/org/pjos/emulator/driver/KeyboardHandler.class"/>
+			<arg value="/org/pjos/emulator/driver/KeyboardInputStream.class"/>
+			<arg value="/org/pjos/common/shell/Shell.class"/>
+        </java>
+    </target>
+
+    <!-- Create the emulator jar file -->
+    <target name="emulator.jar" depends="compile, emulator.init">
+        <jar destfile="build/emulator/emulator.jar"
+            basedir="build"
+            includes="org/pjos/emulator/**,org/pjos/common/**,java/**"
+            manifest="emulator/manifest.mf"/>
+    </target>
+    
+    <!-- Create build directory for emulator -->
+    <target name="emulator.init">
+        <mkdir dir="build/emulator"/>
+    </target>
+
+    <!-- Create the distributable emulator demo -->
+    <target name="emulator.demo"
+    		depends="emulator.jar, emulator.memory, emulator.floppy">
+        <zip destfile="dist/pjosdemo.zip">
+            <zipfileset dir="build/emulator"
+            			includes="**/*.jar,**/*.bin"
+            			prefix="pjosdemo"/>
+            <zipfileset dir="."
+            			includes="README,COPYING"
+            			prefix="pjosdemo"/>
+        </zip>
+    </target>
+
+    
+    
+
+
+
+
+    <!-- Generate an executable image file for the test platform -->
+    <target name="test" depends="test.image, test.c, test.floppy"/>
+
+    <!-- Generate the java image that the test code will use -->
+    <target name="test.image" depends="classpath, compile">
+        <mkdir dir="build/test"/>
+        <java classname="org.pjos.common.image.Creator"
+                classpath="build"
+                fork="yes"
+                failonerror="yes">
+            <arg value="test/image.xml"/>
+            <arg value="build;build/classpath"/>
+            <arg value="build/test/memory.bin"/>
+            <arg value="build/test/memory.log"/>
+        </java>
+    </target>
+
+    <!-- Compile the C code for the test platform -->
+    <target name="test.c">
+        <!-- First copy source files to build folder -->
+        <mkdir dir="build/test"/>
+        <copy todir="build/test">
+            <fileset dir="test" includes="*.c, *.h, Makefile"/>
+        </copy>
+        <!-- Then run the make utility -->
+        <exec executable="make" failonerror="true" dir="build/test"/>
+    </target>
+
+    <!-- Create floppy image -->
+    <target name="test.floppy" depends="test.floppy.init">
+        <java classname="org.pjos.common.fs.fat12.Import"
+        		classpath="build"
+        		failonerror="yes"
+        		fork="yes">
+            <arg value="build/test/floppy.bin"/>
+            <arg value="build"/>
+            <!-- These files will be written to the disk image -->
+            <arg value="/org/pjos/test/driver/Test.class"/>
+        </java>
+    </target>
+
+    <!-- Create the floppy disk image -->
+    <target name="test.floppy.init">
+        <java classname="org.pjos.common.fs.fat12.Image"
+        		classpath="build"
+        		failonerror="yes"
+        		fork="yes">
+            <arg value="build/test/floppy.bin"/>
+            <arg value="PJOS"/>
+        </java>
+    </target>
+
+
+
+    
+    
+    <!--
+        Generate an executable image file for the x86 platform. A new vm is
+        forked here to avoid linkage errors when the system class loader classes
+        with the ANT classloader over classes in the org.w3c.dom package.
+        If this target fails, check the output log file specified in the java
+        tag.
+    -->
+    <target name="x86" depends="x86.kernel, x86.floppy">
+        <copy file="x86/bochsrc.bxrc" todir="build/x86"/>
+    </target>
+    
+    <!-- Generate the java image that the x86 native code will use -->
+    <target name="x86.image" depends="classpath, compile, x86.init">
+        <java classname="org.pjos.common.image.Creator"
+        		classpath="build"
+        		fork="yes"
+        		failonerror="yes">
+            <arg value="x86/image.xml"/>
+            <arg value="build;build/classpath"/>
+            <arg value="build/x86/memory.bin"/>
+            <arg value="build/x86/memory.log"/>
+        </java>
+    </target>
+    
+    <!-- Compile assembly code for the x86 -->
+    <target name="x86.kernel" depends="x86.image">
+        <exec executable="nasm" failonerror="true" dir="build/x86">
+            <arg line=" -f bin ../../x86/asm/kernel.asm"/>
+            <arg line=" -o kernel.bin"/>
+            <arg line=" -l kernel.lst"/>
+            <arg line=" -i ../../x86/asm/"/>
+        </exec>
+    </target>
+    
+    <!-- Create build directory for x86 -->
+    <target name="x86.init">
+        <mkdir dir="build/x86"/>
+    </target>
+
+    <!-- Create boot floppy -->
+    <target name="x86.floppy" depends="x86.floppy.init, x86.image">
+        <java classname="org.pjos.common.fs.fat12.Import"
+        		classpath="build"
+        		failonerror="yes"
+        		fork="yes">
+            <arg value="build/x86/floppy.bin"/>
+            <arg value="build/x86;x86;build"/>
+            <!-- These files will be written to the disk image -->
+            <arg value="/boot/grub/menu.lst"/>
+            <arg value="/kernel.bin"/>
+            <arg value="/org/pjos/x86/driver/Test.class"/>
+        </java>
+    </target>
+
+    <!-- Unzip floppy template -->
+    <target name="x86.floppy.init">
+        <unzip src="x86/blank.zip" dest="build/x86"/>
+    </target>
+
+
+
+
+    
+
+    <!--
+        Compile the java source files from the GNU Classpath distribution.
+        See the file "using_classpath.txt" for instructions on how to configure
+        GNU Classpath.
+
+        Only the java files from classpath are used by PJOS, it is not necessary
+        to make or install classpath.
+    -->
+    <target name="classpath.init">
+        <mkdir dir="build/classpath"/>
+    </target>
+    <target name="classpath" depends="classpath.init">
+        <javac destdir="build/classpath"
+        		debug="on"
+        		bootclasspath="build;build/classpath">
+            <src path="${classpath}"/>
+            <src path="${classpath}/vm/reference"/>
+            <include name="gnu/**"/>
+            <include name="java/**"/>
+            <include name="javax/**"/>
+        </javac>
+    </target>
+
+
+
+
+
+    
+
+
+
+
+    <!-- Remove the build and dist directories -->
+    <target name="clean">
+        <delete dir="dist"/>
+        <delete dir="build"/>
+    </target>
+    
+</project>

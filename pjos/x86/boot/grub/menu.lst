@@ -1,0 +1,10 @@
+# PJOS boot configuration for GNU GRUB bootloader
+
+default 0
+timeout 0
+
+# boot PJOS x86 implementation
+title PJOS
+root (fd0)
+kernel /kernel.bin
+
