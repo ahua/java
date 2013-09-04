@@ -1,0 +1,13 @@
+K 10
+svn:ignore
+V 11
+build
+dist
+
+K 13
+svn:mergeinfo
+V 172
+/lucene/pylucene/branches/branch_3x/jcc:943951-1358562
+/lucene/pylucene/branches/pylucene_4_2/jcc:1467708-1469997
+/lucene/pylucene/branches/pylucene_4_3/jcc:1479735-1497065
+END
